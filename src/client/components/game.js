@@ -1,20 +1,18 @@
 import React from 'react';
-import SceneGameObject from '../game/game_objects/scene-game-object';
-import Assets from '../game/assets';
+import AdventureGame from '../adventure-game/adventure-game';
 
 const GAME_ID = 'game';
 const GAME_WINDOW_DEFAULT_WIDTH = '400';
 const GAME_WINDOW_DEFAULT_HEIGHT = '400';
-const GAME_FPS = 30;
-const ONE_SECOND_MILLIS = 1000;
 
 class Game extends React.Component {
     constructor() {
         super();
         this.state = {
-            gameCanvas: null,
-            gameObjects: [new SceneGameObject(new Assets())]
-        }
+            game: new AdventureGame(this.fetchInput, this.drawScene)
+        };
+
+        this.gameCanvas = null;
     }
 
     render(props={}) {
@@ -22,6 +20,14 @@ class Game extends React.Component {
             <canvas id={GAME_ID} width={props.width || GAME_WINDOW_DEFAULT_WIDTH} height={props.height ||GAME_WINDOW_DEFAULT_HEIGHT }>
             </canvas>
         );
+    }
+
+    drawScene(newFrameBitmap) {
+        this.gameCanvas.drawImage(newFrameBitmap, 0, 0);
+    }
+
+    fetchInput() {
+
     }
 
     componentDidMount() {
@@ -35,38 +41,6 @@ class Game extends React.Component {
         window.onload = () => {
             this.startGame();
         };
-    }
-
-    startGame() {
-       // setInterval(this.handleGameTick.bind(this), ONE_SECOND_MILLIS / GAME_FPS);
-
-        this.handleGameTick();
-    }
-
-    handleGameTick() {
-        console.log('tick!');
-        this.handleInput();
-        this.updateObjects();
-        this.drawScene();
-    }
-
-    handleInput() {
-
-    }
-
-    updateObjects() {
-
-    }
-
-    drawScene() {
-        const canvasContext = this.state.gameCanvas.getContext('2d');
-
-        this.state.gameObjects.forEach(gameObject => gameObject.draw());
-        canvasContext.beginPath();
-        canvasContext.rect(20, 40, 50, 50);
-        canvasContext.fillStyle = "#FF0000";
-        canvasContext.fill();
-        canvasContext.closePath();
     }
 }
 
