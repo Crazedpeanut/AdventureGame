@@ -32,14 +32,9 @@ class Game extends React.Component {
 
     componentDidMount() {
 
-        const gameCanvas = document.getElementById(GAME_ID);
-
-        this.setState({
-            gameCanvas: gameCanvas
-        });
-
         window.onload = () => {
-            this.startGame();
+            this.gameCanvas = document.getElementById(GAME_ID);
+            this.state.game.startGame();
         };
     }
 }

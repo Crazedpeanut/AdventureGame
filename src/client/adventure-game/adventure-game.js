@@ -1,20 +1,16 @@
 import Game from '../../../lib/game/game';
 import SceneGameObject from './game-objects/scene-game-object';
+import AssetLoader from '../../../lib/game/assets';
 
 class AdventureGame extends Game {
     constructor(fetchInput, drawScene) {
-        super(fetchInput, drawScene);
-
-        this.initGameObjects();
-    }
-
-    initGameObjects() {
+        super(fetchInput, drawScene, new AssetLoader());
         this.addGameObject(new SceneGameObject(undefined, 'SceneBase', this));
-
-        super.initGameObjects();
     }
 
-    startGame() {
-        super.startGame();
+    _initGameObjects() {
+        return super._initGameObjects();
     }
 }
+
+export default AdventureGame;
