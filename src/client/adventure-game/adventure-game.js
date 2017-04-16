@@ -5,11 +5,13 @@ class AdventureGame extends Game {
     constructor(fetchInput, drawScene) {
         super(fetchInput, drawScene);
 
-        this._initGameObjects();
+        this.initGameObjects();
     }
 
-    _initGameObjects() {
+    initGameObjects() {
         this.addGameObject(new SceneGameObject(undefined, 'SceneBase', this));
+
+        super.initGameObjects();
     }
 
     startGame() {
