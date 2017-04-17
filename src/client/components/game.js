@@ -9,7 +9,7 @@ class Game extends React.Component {
     constructor() {
         super();
         this.state = {
-            game: new AdventureGame(this.fetchInput, this.drawScene)
+            game: new AdventureGame(this.fetchInput.bind(this), this.drawScene.bind(this))
         };
 
         this.gameCanvas = null;
@@ -23,7 +23,8 @@ class Game extends React.Component {
     }
 
     drawScene(newFrameBitmap) {
-        this.gameCanvas.drawImage(newFrameBitmap, 0, 0);
+        const ctx = this.gameCanvas.getContext('2d');
+        ctx.drawImage(newFrameBitmap, 0, 0);
     }
 
     fetchInput() {
@@ -31,7 +32,6 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-
         window.onload = () => {
             this.gameCanvas = document.getElementById(GAME_ID);
             this.state.game.startGame();

@@ -7,10 +7,6 @@ class AdventureGame extends Game {
         super(fetchInput, drawScene, new AssetLoader());
         this.addGameObject(new SceneGameObject(undefined, 'SceneBase', this));
     }
-
-    _initGameObjects() {
-        return super._initGameObjects();
-    }
 }
 
 export default AdventureGame;
