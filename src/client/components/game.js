@@ -9,7 +9,12 @@ class Game extends React.Component {
     constructor() {
         super();
         this.state = {
-            game: new AdventureGame(this.fetchInput.bind(this), this.drawScene.bind(this))
+            game: new AdventureGame(
+                this._fetchInput.bind(this),
+                this._drawScene.bind(this),
+                this._createCanvas.bind(this),
+                GAME_WINDOW_DEFAULT_WIDTH,
+                GAME_WINDOW_DEFAULT_HEIGHT)
         };
 
         this.gameCanvas = null;
@@ -17,17 +22,23 @@ class Game extends React.Component {
 
     render(props={}) {
         return (
-            <canvas id={GAME_ID} width={props.width || GAME_WINDOW_DEFAULT_WIDTH} height={props.height ||GAME_WINDOW_DEFAULT_HEIGHT }>
-            </canvas>
+            <div id='gameCanvasContainer'>
+                <canvas id={GAME_ID} width={props.width || GAME_WINDOW_DEFAULT_WIDTH} height={props.height ||GAME_WINDOW_DEFAULT_HEIGHT }>
+                </canvas>
+            </div>
         );
     }
 
-    drawScene(newFrameBitmap) {
+    _drawScene(newCanvas) {
         const ctx = this.gameCanvas.getContext('2d');
-        ctx.drawImage(newFrameBitmap, 0, 0);
+        ctx.drawImage(newCanvas, 0, 0);
     }
 
-    fetchInput() {
+    _createCanvas() {
+        return document.createElement('canvas');
+    }
+
+    _fetchInput() {
 
     }
 

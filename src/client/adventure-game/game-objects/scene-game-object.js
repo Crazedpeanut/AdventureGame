@@ -5,18 +5,10 @@ import Drawable,{DRAWABLE_TYPE_SPRITE} from '../../../../lib/game/drawable';
 const TEST_ASSET = 'static/img/Capture001.png';
 
 class SceneGameObject extends GameObject {
-    constructor(id=-1, name, game) {
-        super(id, name, game);
-
-        this._game = game;
-    }
-
     init() {
         //Preload asset cache with test asset
         return this._game.assetLoader.loadAsset(TEST_ASSET)
             .then(img => {
-                logger.info('Test Asset Complete');
-                logger.info(`Type of response: ${typeof img}`);
                 return Promise.resolve(img);
             });
     }
@@ -26,7 +18,13 @@ class SceneGameObject extends GameObject {
         //As long as it is has been given a chance to prefetch an asset
         return this._game.assetLoader.loadAsset(TEST_ASSET)
             .then(img => {
-                const drawable = new Drawable(DRAWABLE_TYPE_SPRITE, img);
+                const drawable = new Drawable(DRAWABLE_TYPE_SPRITE, {
+                    x: 0,
+                    y: 0,
+                    width: this._game.gameWidth,
+                    height: this._game.gameHeight,
+                    image: img
+                });
                 return Promise.resolve(drawable);
             });
     }
