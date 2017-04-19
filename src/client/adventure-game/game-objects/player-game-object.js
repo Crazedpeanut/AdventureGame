@@ -1,5 +1,5 @@
 import GameObject from '../../../../lib/game/game-object';
-import Drawable,{DRAWABLE_TYPE_RECT} from '../../../../lib/game/drawable';
+import {Drawable, DRAWABLE_TYPE_RECT} from '../../../../lib/game/drawable';
 
 export default class PlayerGameObject extends GameObject {
 
@@ -15,7 +15,10 @@ export default class PlayerGameObject extends GameObject {
             x: this.x,
             y: this.y,
             width: this.width,
-            height: this.height
+            height: this.height,
+            fill: {
+                color: '#000000'
+            }
         }, 1));
     }
 

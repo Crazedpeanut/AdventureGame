@@ -17,7 +17,8 @@ class Game extends React.Component {
                 GAME_WINDOW_DEFAULT_HEIGHT)
         };
 
-        this.gameCanvas = null;
+        this._keyPressBuffer = [];
+        this._gameCanvas = null;
     }
 
     render(props={}) {
@@ -29,8 +30,16 @@ class Game extends React.Component {
         );
     }
 
+    _handleKeyDown() {
+        console.log('keydown');
+    }
+
+    _handleKeyUp() {
+        console.log('keyup');
+    }
+
     _drawScene(newCanvas) {
-        const ctx = this.gameCanvas.getContext('2d');
+        const ctx = this._gameCanvas.getContext('2d');
         ctx.drawImage(newCanvas, 0, 0);
     }
 
@@ -44,8 +53,11 @@ class Game extends React.Component {
 
     componentDidMount() {
         window.onload = () => {
-            this.gameCanvas = document.getElementById(GAME_ID);
+            this._gameCanvas = document.getElementById(GAME_ID);
             this.state.game.startGame();
+
+            window.addEventListener('keyup', this._handleKeyUp.bind(this));
+            window.addEventListener('keydown', this._handleKeyDown.bind(this));
         };
     }
 }
