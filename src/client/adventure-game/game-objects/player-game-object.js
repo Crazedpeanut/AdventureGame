@@ -3,6 +3,13 @@ import {Drawable, DRAWABLE_TYPE_RECT} from '../../../../lib/game/drawable';
 
 export default class PlayerGameObject extends GameObject {
 
+    constructor(movementSpeed=5, id, name, game) {
+        super(id, name, game);
+
+        this.game = game;
+        this.movementSpeed = movementSpeed;
+    }
+
     init() {
         this.x = 0;
         this.y = 0;
@@ -23,6 +30,13 @@ export default class PlayerGameObject extends GameObject {
     }
 
     update() {
-        return super.update();
+        const xAxis = this.game.input.getXAxis();
+        const yAxis = this.game.input.getYAxis();
+
+        const elapsedMillisSinceLastFrame = this.game.getElapsedMillisSinceLastFrame();
+
+        //TODO: Fix this so movement isn't dodgy
+        this.x += xAxis * this.movementSpeed;
+        this.y += yAxis * this.movementSpeed;
     }
 }

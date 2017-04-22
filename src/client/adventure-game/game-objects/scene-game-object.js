@@ -8,8 +8,6 @@ class SceneGameObject extends GameObject {
     }
 
     draw() {
-        //Trust assetLoader will provide asset in timely manner
-        //As long as it is has been given a chance to prefetch an asset
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_RECT, {
                 x: 0,
                 y: 0,
