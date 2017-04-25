@@ -7,7 +7,7 @@ export default class PlayerGameObject extends GameObject {
         super(id, name, game);
 
         this.game = game;
-        this.movementSpeed = movementSpeed;
+        this.movementSpeed = movementPerMillisecond;
     }
 
     init() {
