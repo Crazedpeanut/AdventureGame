@@ -6,8 +6,8 @@ import AssetLoader from '../../../lib/game/assets';
 import GraphicsBuilder from '../../../lib/game/builder/graphics-builder';
 
 const GAME_ID = 'game';
-const GAME_WINDOW_DEFAULT_WIDTH = '400';
-const GAME_WINDOW_DEFAULT_HEIGHT = '400';
+const GAME_WINDOW_DEFAULT_WIDTH = '800';
+const GAME_WINDOW_DEFAULT_HEIGHT = '800';
 
 class Game extends React.Component {
     constructor() {

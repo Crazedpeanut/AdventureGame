@@ -33,8 +33,6 @@ export default class PlayerGameObject extends GameObject {
         const xAxis = this.game.input.getXAxis();
         const yAxis = this.game.input.getYAxis();
 
-        const elapsedMillisSinceLastFrame = this.game.getElapsedMillisSinceLastFrame();
-
         //TODO: Fix this so movement isn't dodgy
         this.x += xAxis * this.movementSpeed;
         this.y += yAxis * this.movementSpeed;
