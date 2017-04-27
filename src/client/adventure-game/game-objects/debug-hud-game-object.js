@@ -9,9 +9,9 @@ class DebugHudGameObject extends GameObject {
 
     draw() {
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_TEXT, {
-                x: 0,
-                y: 0,
-                maxWidth: '50px',
+                x: 100,
+                y: 100,
+                maxWidth: 50,
                 text: "Blah blash blah",
                 fill: {
                     color: "#000000"

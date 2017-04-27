@@ -16,8 +16,7 @@ class SceneGameObject extends GameObject {
                 fill: {
                     color: '#FF0000'
                 }
-            })
-
+            }, 0)
         );
     }
 
