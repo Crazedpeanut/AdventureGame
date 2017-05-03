@@ -4,10 +4,11 @@ import AdventureGame from '../adventure-game/adventure-game';
 import InputBuilder from '../../../lib/game/builder/input-builder';
 import AssetLoader from '../../../lib/game/assets';
 import GraphicsBuilder from '../../../lib/game/builder/graphics-builder';
+import CreateObjectFormComponent from './create-object-form-component';
 
 const GAME_ID = 'game';
-const GAME_WINDOW_DEFAULT_WIDTH = '800';
-const GAME_WINDOW_DEFAULT_HEIGHT = '800';
+const GAME_WINDOW_DEFAULT_WIDTH = 800;
+const GAME_WINDOW_DEFAULT_HEIGHT = 800;
 
 class Game extends React.Component {
     constructor() {
@@ -23,11 +24,16 @@ class Game extends React.Component {
 
     render(props={}) {
         return (
-            <div id='gameCanvasContainer'>
+            <div id='gameContainer'>
                 <canvas id={GAME_ID} width={props.width || GAME_WINDOW_DEFAULT_WIDTH} height={props.height ||GAME_WINDOW_DEFAULT_HEIGHT }>
                 </canvas>
+                <CreateObjectFormComponent onSubmit={this._handleCreateObjectFormSubmit}/>
             </div>
         );
+    }
+
+    _handleCreateObjectFormSubmit(evnt) {
+        console.log(JSON.stringify(evnt));
     }
 
     _handleKeyDown(event) {
