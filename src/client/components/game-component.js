@@ -1,10 +1,10 @@
 import React from 'react';
-import GameBuilder from '../../../lib/game/builder/game-builder';
 import AdventureGame from '../adventure-game/adventure-game';
-import InputBuilder from '../../../lib/game/builder/input-builder';
 import AssetLoader from '../../../lib/game/assets';
-import GraphicsBuilder from '../../../lib/game/builder/graphics-builder';
 import CreateObjectFormComponent from './create-object-form-component';
+import GraphicsFactory from '../../../lib/game/graphics/graphics-factory';
+import GameBuilder from '../../../lib/game/builder/game-builder';
+import InputFactory from '../../../lib/game/input/input-factory';
 
 const GAME_ID = 'game';
 const GAME_WINDOW_DEFAULT_WIDTH = 800;
@@ -36,42 +36,13 @@ class Game extends React.Component {
         console.log(JSON.stringify(evnt));
     }
 
-    _handleKeyDown(event) {
-        this._inputBuffer.push(event);
-    }
-
-    _handleKeyUp() {
-        this._inputBuffer.push(event);
-    }
-
-    _drawScene(newCanvas) {
-        const ctx = this._gameCanvas.getContext('2d');
-        ctx.drawImage(newCanvas, 0, 0);
-    }
-
-    _createCanvas() {
-        return document.createElement('canvas');
-    }
-
-    _fetchInput() {
-        const inputs = this._inputBuffer;
-        this._inputBuffer = [];
-
-        return inputs;
-    }
-
     componentDidMount() {
 
         window.onload = () => {
 
-            const graphics = new GraphicsBuilder()
-                .setDrawScene(this._drawScene.bind(this))
-                .setCreateCanvas(this._createCanvas.bind(this))
-                .build();
+            const graphics = GraphicsFactory.webCanvasGraphics(document);
 
-            const input = new InputBuilder()
-                .setFetchInput(this._fetchInput.bind(this))
-                .build();
+            const input = InputFactory.webInput(window, )
 
             this.state.game = new GameBuilder()
                 .setGameClass(AdventureGame)
@@ -84,9 +55,6 @@ class Game extends React.Component {
 
             this._gameCanvas = document.getElementById(GAME_ID);
             this.state.game.startGame();
-
-            window.addEventListener('keyup', this._handleKeyUp.bind(this));
-            window.addEventListener('keydown', this._handleKeyDown.bind(this));
         };
     }
 }
