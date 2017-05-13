@@ -18,8 +18,8 @@ class DebugHudGameObject extends GameObject {
 
     draw() {
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_TEXT, {
-                x: 20,
-                y: 20,
+                x: 100,
+                y: 100,
                 text: this.message,
                 fill: {
                     color: "#000000"

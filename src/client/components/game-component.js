@@ -5,8 +5,10 @@ import CreateObjectFormComponent from './create-object-form-component';
 import GraphicsFactory from '../../../lib/game/graphics/graphics-factory';
 import GameBuilder from '../../../lib/game/builder/game-builder';
 import InputFactory from '../../../lib/game/input/input-factory';
+import EventBus from '../../../lib/events/event-bus';
 
-const GAME_ID = 'game';
+const GAME_CONTAINER_ID_ATTR = 'gameContainer';
+const GAME_CANVAS_ID_ATTR = 'game';
 const GAME_WINDOW_DEFAULT_WIDTH = 800;
 const GAME_WINDOW_DEFAULT_HEIGHT = 800;
 
@@ -19,13 +21,12 @@ class Game extends React.Component {
         };
 
         this._inputBuffer = [];
-        this._gameCanvas = null;
     }
 
     render(props={}) {
         return (
-            <div id='gameContainer'>
-                <canvas id={GAME_ID} width={props.width || GAME_WINDOW_DEFAULT_WIDTH} height={props.height ||GAME_WINDOW_DEFAULT_HEIGHT }>
+            <div id={GAME_CONTAINER_ID_ATTR}>
+                <canvas id={GAME_CANVAS_ID_ATTR} width={props.width || GAME_WINDOW_DEFAULT_WIDTH} height={props.height ||GAME_WINDOW_DEFAULT_HEIGHT }>
                 </canvas>
                 <CreateObjectFormComponent onSubmit={this._handleCreateObjectFormSubmit}/>
             </div>
@@ -40,9 +41,9 @@ class Game extends React.Component {
 
         window.onload = () => {
 
-            const graphics = GraphicsFactory.webCanvasGraphics(document);
-
-            const input = InputFactory.webInput(window, )
+            const gameCanvas = document.getElementById(GAME_CANVAS_ID_ATTR);
+            const graphics = GraphicsFactory.webCanvasGraphics(document, gameCanvas);
+            const input = InputFactory.webInput(window);
 
             this.state.game = new GameBuilder()
                 .setGameClass(AdventureGame)
@@ -51,9 +52,9 @@ class Game extends React.Component {
                 .setGameHeight(GAME_WINDOW_DEFAULT_HEIGHT)
                 .setGameWidth(GAME_WINDOW_DEFAULT_WIDTH)
                 .setAssetLoader(new AssetLoader())
+                .setEventBus(new EventBus())
                 .build();
 
-            this._gameCanvas = document.getElementById(GAME_ID);
             this.state.game.startGame();
         };
     }
