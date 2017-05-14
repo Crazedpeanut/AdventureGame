@@ -1,16 +1,17 @@
 import GameObject from '../../../../lib/game/game-object';
 const logger = require('../../../../lib/logger/logger');
 import {Drawable, DRAWABLE_TYPE_RECT} from '../../../../lib/game/drawable';
+import {Vector2} from '../../../../lib/math/vector';
 
 class SceneGameObject extends GameObject {
     init() {
+        this.globalPosition = new Vector2(0, 0);
         return Promise.resolve();
     }
 
-    draw() {
+    draw(position) {
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_RECT, {
-                x: 0,
-                y: 0,
+                position,
                 width: this._game.gameWidth,
                 height: this._game.gameHeight,
                 fill: {

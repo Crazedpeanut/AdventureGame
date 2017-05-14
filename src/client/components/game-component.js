@@ -42,8 +42,9 @@ class Game extends React.Component {
         window.onload = () => {
 
             const gameCanvas = document.getElementById(GAME_CANVAS_ID_ATTR);
+            const eventBus = new EventBus();
             const graphics = GraphicsFactory.webCanvasGraphics(document, gameCanvas);
-            const input = InputFactory.webInput(window);
+            const input = InputFactory.webInput(window, undefined, eventBus);
 
             this.state.game = new GameBuilder()
                 .setGameClass(AdventureGame)
@@ -52,7 +53,7 @@ class Game extends React.Component {
                 .setGameHeight(GAME_WINDOW_DEFAULT_HEIGHT)
                 .setGameWidth(GAME_WINDOW_DEFAULT_WIDTH)
                 .setAssetLoader(new AssetLoader())
-                .setEventBus(new EventBus())
+                .setEventBus(eventBus)
                 .build();
 
             this.state.game.startGame();

@@ -1,6 +1,7 @@
 import GameObject from '../../../../lib/game/game-object';
 const logger = require('../../../../lib/logger/logger');
 import {Drawable, DRAWABLE_TYPE_TEXT} from '../../../../lib/game/drawable';
+import {Vector2} from '../../../../lib/math/vector';
 
 class DebugHudGameObject extends GameObject {
 
@@ -12,26 +13,25 @@ class DebugHudGameObject extends GameObject {
 
     init() {
         this.message = ``;
+        this.globalPosition = new Vector2(50,50);
 
         return Promise.resolve();
     }
 
-    draw() {
+    draw(positionVector2) {
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_TEXT, {
-                x: 100,
-                y: 100,
+                positionVector2,
                 text: this.message,
                 fill: {
                     color: "#000000"
                 },
-                font: "30px helvetica"
+                font: "15px helvetica"
             }, 1)
         );
     }
 
     update() {
-        //Always tell game engine no state changes occured
-        this.message = `Avg tick time: ${this.game.getAverageTickTimeMs()} Ave draw time: ${this.game.getAverageDrawTimeMs()}`;
+        this.message = `Avg tick time: ${this.game.getAverageTickTimeMs()} Ave draw time: ${this.game.getAverageDrawTimeMs()} Events in EventBus: ${this.game.eventBus.eventBusItemCount()}`;
         return Promise.resolve(false);
     }
 }
