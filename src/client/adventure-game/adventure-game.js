@@ -7,9 +7,10 @@ class AdventureGame extends Game {
     constructor(input, graphics, assetLoader, gameWidth, gameHeight, eventBus, gameObjectTree) {
         super(input, graphics, assetLoader, gameWidth, gameHeight, eventBus, gameObjectTree);
 
-        this.addGameObject(new SceneGameObject(undefined, 'SceneBase', this));
-        this.addGameObject(new PlayerGameObject(undefined, undefined, 'PlayerGameObject', this));
-        this.addGameObject(new DebugHudGameObject(undefined, 'Debug HUD', this))
+        const rootGameObject = gameObjectTree.getRootGameObject();
+        this.addGameObject(rootGameObject, new SceneGameObject(undefined, 'SceneBase', this));
+        this.addGameObject(rootGameObject, new PlayerGameObject(undefined, undefined, 'PlayerGameObject', this));
+        this.addGameObject(rootGameObject, new DebugHudGameObject(undefined, 'Debug HUD', this))
     }
 }
 

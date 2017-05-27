@@ -14,13 +14,14 @@ class DebugHudGameObject extends GameObject {
     init() {
         this.message = ``;
         this.globalPosition = new Vector2(50,50);
+        this.size = new Vector2(50, 50);
 
         return Promise.resolve();
     }
 
-    draw(positionVector2) {
+    draw(position) {
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_TEXT, {
-                positionVector2,
+                position,
                 text: this.message,
                 fill: {
                     color: "#000000"

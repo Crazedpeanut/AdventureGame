@@ -65,15 +65,15 @@ export default class PlayerGameObject extends GameObject {
     }
 
     init() {
-        this.width = 10;
-        this.height = 10;
+        this.size = new Vector2(10, 10);
+        return Promise.resolve();
     }
 
     draw(position) {
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_RECT, {
             position,
-            width: this.width,
-            height: this.height,
+            width: this.size.x,
+            height: this.size.y,
             fill: {
                 color: '#000000'
             }

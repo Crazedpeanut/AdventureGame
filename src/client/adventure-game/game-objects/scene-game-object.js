@@ -5,14 +5,15 @@ import {Vector2} from '../../../../lib/math/vector';
 
 class SceneGameObject extends GameObject {
     init() {
+        this.size = new Vector2(this._game.gameWidth, this._game.gameHeight);
         return Promise.resolve();
     }
 
     draw(position) {
         return Promise.resolve(new Drawable(DRAWABLE_TYPE_RECT, {
                 position,
-                width: this._game.gameWidth,
-                height: this._game.gameHeight,
+                width: this.size.x,
+                height: this.size.y,
                 fill: {
                     color: '#FF0000'
                 }
