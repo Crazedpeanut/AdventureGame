@@ -6,7 +6,6 @@ import {Vector2} from '../../../../lib/math/vector';
 class SceneGameObject extends GameObject {
     init() {
         this.size = new Vector2(this._game.gameWidth, this._game.gameHeight);
-        return Promise.resolve();
     }
 
     draw(position) {

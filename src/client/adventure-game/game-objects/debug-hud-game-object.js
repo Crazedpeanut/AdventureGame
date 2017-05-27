@@ -15,8 +15,6 @@ class DebugHudGameObject extends GameObject {
         this.message = ``;
         this.globalPosition = new Vector2(50,50);
         this.size = new Vector2(50, 50);
-
-        return Promise.resolve();
     }
 
     draw(position) {

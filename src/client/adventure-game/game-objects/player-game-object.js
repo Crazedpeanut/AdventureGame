@@ -66,7 +66,6 @@ export default class PlayerGameObject extends GameObject {
 
     init() {
         this.size = new Vector2(10, 10);
-        return Promise.resolve();
     }
 
     draw(position) {
