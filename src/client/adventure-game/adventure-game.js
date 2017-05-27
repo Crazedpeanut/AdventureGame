@@ -4,8 +4,8 @@ import PlayerGameObject from './game-objects/player-game-object';
 import DebugHudGameObject from './game-objects/debug-hud-game-object';
 
 class AdventureGame extends Game {
-    constructor(input, graphics, assetLoader, gameWidth, gameHeight, eventBus) {
-        super(input, graphics, assetLoader, gameWidth, gameHeight, eventBus);
+    constructor(input, graphics, assetLoader, gameWidth, gameHeight, eventBus, gameObjectTree) {
+        super(input, graphics, assetLoader, gameWidth, gameHeight, eventBus, gameObjectTree);
 
         this.addGameObject(new SceneGameObject(undefined, 'SceneBase', this));
         this.addGameObject(new PlayerGameObject(undefined, undefined, 'PlayerGameObject', this));

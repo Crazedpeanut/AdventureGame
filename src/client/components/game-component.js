@@ -6,6 +6,7 @@ import GraphicsFactory from '../../../lib/game/graphics/graphics-factory';
 import GameBuilder from '../../../lib/game/builder/game-builder';
 import InputFactory from '../../../lib/game/input/input-factory';
 import EventBus from '../../../lib/events/event-bus';
+import GameObjectTree from '../../../lib/game/game-object-tree';
 
 const GAME_CONTAINER_ID_ATTR = 'gameContainer';
 const GAME_CANVAS_ID_ATTR = 'game';
@@ -45,6 +46,7 @@ class Game extends React.Component {
             const eventBus = new EventBus();
             const graphics = GraphicsFactory.webCanvasGraphics(document, gameCanvas);
             const input = InputFactory.webInput(window, undefined, eventBus);
+            const gameObjectTree = new GameObjectTree();
 
             this.state.game = new GameBuilder()
                 .setGameClass(AdventureGame)
@@ -54,6 +56,7 @@ class Game extends React.Component {
                 .setGameWidth(GAME_WINDOW_DEFAULT_WIDTH)
                 .setAssetLoader(new AssetLoader())
                 .setEventBus(eventBus)
+                .setGameObjectTree(gameObjectTree)
                 .build();
 
             this.state.game.startGame();

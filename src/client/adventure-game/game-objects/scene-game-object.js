@@ -5,7 +5,6 @@ import {Vector2} from '../../../../lib/math/vector';
 
 class SceneGameObject extends GameObject {
     init() {
-        this.globalPosition = new Vector2(0, 0);
         return Promise.resolve();
     }
 
