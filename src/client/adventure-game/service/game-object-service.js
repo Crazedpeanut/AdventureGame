@@ -1,0 +1,6 @@
+class GameObjectService {
+
+    findGameObjectsInSector(sectorId) {
+
+    }
+}
