@@ -1,7 +1,6 @@
 const SocketIO = require('socket.io');
 const SocketRouter = require('socket.io-events');
 const GameEvent = require('../common/models/game-event');
-const AuthReceivedEvent = require('../common/models/auth-received-event');
 const EventFactory = require('../common/factory/event-factory');
 const AuthRequiredEvent = require('../common/models/auth-required-event');
 const AuthSucceededEvent = require('../common/models/auth-succeeded-event');
