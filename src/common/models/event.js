@@ -1,6 +1,6 @@
 class Event {
-    constructor() {
-        this.eventName = undefined;
+    constructor(eventName) {
+        this.eventName = eventName;
     }
 }
 

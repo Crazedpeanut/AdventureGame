@@ -1,8 +1,9 @@
 const AuthEvent = require('./auth-event');
 
 class AuthRequiredEvent extends AuthEvent {
-    constructor() {
+    constructor(sessionId) {
         super('authRequired');
+        this.sessionId = sessionId;
     }
 }
 

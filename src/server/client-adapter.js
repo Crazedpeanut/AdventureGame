@@ -1,33 +1,43 @@
-import SocketIO from 'socket.io';
-import SocketRouter from 'socket.io-events';
-import GameEvent from '../common/models/game-event';
-import AuthReceivedEvent from '../common/models/auth-received-event';
-import EventFactory from '../common/factory/event-factory';
-import AuthRequiredEvent from '../common/models/auth-required-event';
-import AuthSuccededEvent from '../common/models/auth-succeeded-event';
-import AuthFailedEvent from '../common/models/auth-failed-event';
+const SocketIO = require('socket.io');
+const SocketRouter = require('socket.io-events');
+const GameEvent = require('../common/models/game-event');
+const AuthReceivedEvent = require('../common/models/auth-received-event');
+const EventFactory = require('../common/factory/event-factory');
+const AuthRequiredEvent = require('../common/models/auth-required-event');
+const AuthSucceededEvent = require('../common/models/auth-succeeded-event');
+const AuthFailedEvent = require('../common/models/auth-failed-event');
+const config = require('config');
 
 const sessionMap = {};
-
 const socketRouter = SocketRouter();
 const eventFactory = new EventFactory();
 
-socketRouter.on(function requireAuth(sock, args, next){
-    console.log(sock.id);
-    if(sessionMap[sock.id] || args[0] == AuthReceivedEvent.prototype.AUTH_EVENT_KEY) {
-        next();
-    } else {
-        sock.emit(AuthRequiredEvent.prototype.AUTH_REQUIRED_EVENT_KEY, new AuthRequiredEvent());
-        console.log('Auth required for session id ' + sock.id);
-    }
+socketRouter.on(function recordSocketId(sock, args, next){
+   if (!sessionMap[sock.id]) sessionMap[sock.id] = true;
+   next();
 });
 
+socketRouter.on(function logRequest(sock, args, next){
+    console.log(`Received event ${sock.id} ${JSON.stringify(args)}`);
+    next();
+});
+
+socketRouter.on(function requireAuth(sock, args, next){
+    if(!config.requireAuth || args[0] === 'authEvent') {
+        console.log('Passing event through authBlocker' + sock.id);
+        next();
+    } else {
+        const authRequiredEvent = new AuthRequiredEvent(sock.id);
+        sock.emit(authRequiredEvent.eventName, authRequiredEvent);
+        console.log('Blocking request, authRequired required for session id ' + sock.id);
+    }
+});
 
 socketRouter.on(GameEvent.prototype.GAME_EVENT_KEY, (sock, args, next) => {
     console.log('game event');
 });
 
-socketRouter.on(AuthReceivedEvent.prototype.AUTH_EVENT_KEY, (sock, args, next) => {
+socketRouter.on('authEvent', (sock, args, next) => {
     console.log('auth event');
     const authEvent = eventFactory.createEvent(args[0], args.splice(1));
 
@@ -37,7 +47,7 @@ socketRouter.on(AuthReceivedEvent.prototype.AUTH_EVENT_KEY, (sock, args, next) =
         authEvent.validate()
             .then(() => {
                 console.log('login success');
-                const successEvent = new AuthSuccededEvent();
+                const successEvent = new AuthSucceededEvent();
                 sock.emit(successEvent.eventName, successEvent);
             })
             .catch((err) => {

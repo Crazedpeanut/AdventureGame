@@ -6,3 +6,5 @@ class AuthEvent extends Event {
         this.authEventType = authEventType;
     }
 }
+
+module.exports = AuthEvent;

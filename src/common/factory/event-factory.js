@@ -4,30 +4,33 @@ const JwtAuthReceivedEvent = require('../models/jwt-auth-received-event');
 const AuthRequiredEvent = require('../models/auth-required-event');
 
 class EventFactory {
-    createEvent(eventName, ...eventArgs) {
+    createEvent(eventName, eventData) {
         switch(eventName) {
-            case 'authSucceeded': return new AuthSucceededEvent();
-            case 'authFailed': return new AuthFailedEvent();
-            case 'authRequired': return new AuthRequiredEvent();
-            case 'authReceived': return this._createAuthReceivedEvent(eventArgs);
+            case 'authEvent': return this._createAuthEvent(eventData.authEventType, eventData);
+            case 'authReceived': return this._createAuthReceivedEvent(eventData);
             default: {
                 console.log('Unknown event: ' + eventName);
             }
         }
     }
 
-    _createAuthConfimedEvent() {
-
+    _createAuthEvent(authEventType, authEvent) {
+        switch(authEventType) {
+            case 'authSucceeded': return new AuthSucceededEvent();
+            case 'authFailed': return new AuthFailedEvent(authEvent.reason);
+            case 'authRequired': return new AuthRequiredEvent(authEvent.sessionId);
+            default: console.log('unknown auth event type! ' + authEventType);
+        }
     }
 
-    _createAuthReceivedEvent(...args) {
-        const authType = args[0];
-
-        switch(authType) {
-            case 'jwt': return new JwtAuthReceivedEvent(args[1]);
+    _createAuthReceivedEvent(eventData) {
+        switch(eventData.authType) {
+            case 'jwt': return new JwtAuthReceivedEvent(eventData.encodedToken);
             default: {
                 console.log('Unknown authType: ' + authType);
             }
         }
     }
 }
+
+module.exports = EventFactory;

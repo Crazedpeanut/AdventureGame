@@ -1,9 +1,9 @@
 const SocketIO = require('socket.io-client');
 const EventEmitter = require('events');
 const GameEvent = require('./../common/models/game-event');
-const AuthRequiredEvent = require('./../common/models/auth-required-event');
-const JwtAuthReceivedEvent = require('./../common/models/jwt-auth-received-event');
-const AuthReceivedEvent = require('./../common/models/auth-received-event');
+const EventFactory = require('../common/factory/event-factory');
+
+const eventFactory = new EventFactory();
 
 class ServerAdapter extends EventEmitter {
     constructor(serverUrl) {
@@ -13,11 +13,7 @@ class ServerAdapter extends EventEmitter {
     }
 
     connect() {
-        this._connection = SocketIO.connect(this._serverUrl, {
-            extraHeaders: {
-                Authorization: 'Hello'
-            }
-        });
+        this._connection = SocketIO.connect(this._serverUrl);
         this._registerEventListeners(this._connection);
 
         this._connection.emit(GameEvent.prototype.GAME_EVENT_KEY, new GameEvent('from client'));
@@ -41,19 +37,18 @@ class ServerAdapter extends EventEmitter {
             console.log('connect_timeout');
         });
 
-        openSocket.on(GameEvent.prototype.GAME_EVENT_KEY, (event) => {
-            console.log('recieved game event: ' + JSON.stringify(event));
-            this.emit('event', new GameEvent(event.eventName));
+        openSocket.on('gameEvent', (event) => {
+            console.log('received game event: ' + JSON.stringify(event));
+            const gameEvent = eventFactory.createEvent(event.eventName, event);
+            this.emit(gameEvent.eventName, event);
         });
 
-        openSocket.on(AuthRequiredEvent.prototype.AUTH_REQUIRED_EVENT_KEY, (event) => {
-            console.log('authRequiredEvent: ' + JSON.stringify(event));
+        openSocket.on('authEvent', (event) => {
+            console.log('authEvent: ' + JSON.stringify(event));
 
-            const token = jwt.sign({
-                userId: 'danky'
-            }, 'secret', { expiresIn: '1h' });
+            const authEvent = eventFactory.createEvent(event.eventName, event);
 
-            openSocket.emit(AuthReceivedEvent.prototype.AUTH_EVENT_KEY, 'jwt', new JwtAuthReceivedEvent(token));
+            this.emit(authEvent.eventName, authEvent);
         });
     }
 }

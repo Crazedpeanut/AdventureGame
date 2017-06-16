@@ -27,6 +27,10 @@ class JwtAuthReceivedEvent extends AuthReceivedEvent {
         });
     }
 
+    get encodedToken() {
+        return this._encodedToken;
+    }
+
     get userId() {
         return this._userId;
     }
