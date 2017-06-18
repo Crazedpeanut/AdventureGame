@@ -7,4 +7,6 @@ class AuthEvent extends Event {
     }
 }
 
+AuthEvent.prototype.AUTH_EVENT_KEY = 'authEvent';
+
 module.exports = AuthEvent;

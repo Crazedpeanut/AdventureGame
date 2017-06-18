@@ -1,6 +1,6 @@
 const SocketIO = require('socket.io-client');
 const EventEmitter = require('events');
-const GameEvent = require('./../common/models/game-event');
+const GameEvent = require('./../common/events/game-event');
 const EventFactory = require('../common/factory/event-factory');
 
 const eventFactory = new EventFactory();

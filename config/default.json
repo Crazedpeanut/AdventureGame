@@ -1,4 +1,4 @@
 {
   "authServicerUrl":"http://adventuregame.johnkendall.net/auth",
-  "requireAuth": false
+  "requireAuth": true
 }

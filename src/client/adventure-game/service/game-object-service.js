@@ -4,3 +4,5 @@ class GameObjectService {
 
     }
 }
+
+module.exports = Ga

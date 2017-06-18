@@ -4,4 +4,6 @@ class GameObject {
         this.coordinates = coordinates;
         this.gameObjectId = gameObjectId;
     }
+
+
 }
