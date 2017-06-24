@@ -1,20 +1,20 @@
 const GameEngineService = require('../service/game-engine-service');
-const GameEngineAdapter = require('../adapter/game-engine-adapter');
-const EventFactory = require('../factory/event-factory');
-const config = require('config');
 
 class GameEngineServiceFactory {
 
     /**
      * @param {String} redisUrl
+     * @param {GameEngineAdapter} gameEngineAdapter
+     * @param {EventRouter} gameEngineEventRouter
      */
-    constructor(redisUrl) {
+    constructor(redisUrl, gameEngineAdapter, gameEngineEventRouter) {
         this.redisUrl = redisUrl;
+        this.gameEngineAdapter = gameEngineAdapter;
+        this.gameEngineEventRouter = gameEngineEventRouter;
     }
 
     create() {
-        const gameEngineAdapter = new GameEngineAdapter(new EventFactory(), config.redisUrl);
-        return new GameEngineService(gameEngineAdapter);
+        return new GameEngineService(this.gameEngineAdapter, this.gameEngineEventRouter);
     }
 }
 

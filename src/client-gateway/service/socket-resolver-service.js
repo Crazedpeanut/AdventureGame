@@ -2,11 +2,11 @@ class SocketResolverService {
 
     /**
      * @param {SessionRepository} sessionRepository
-     * @param {SocketIO} socketIo
+     * @param {GameClientAdapter} gameClientAdapter
      */
-    constructor(sessionRepository, socketIo) {
+    constructor(sessionRepository, gameClientAdapter) {
         this._sessionRepository = sessionRepository;
-        this._socketIo = socketIo;
+        this._gameClientAdapter = gameClientAdapter;
     }
 
     resolveSocket(sessionId) {
@@ -16,6 +16,8 @@ class SocketResolverService {
             console.error(`Socket does not exist on this node with sessionId: ${sessionId}`);
             return null;
         }
+
+        return this._gameClientAdapter.findSocketBySocketId(sessionId);
     }
 }
 

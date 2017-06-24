@@ -7,6 +7,7 @@ class GameEngineEventHandler extends EventHandler {
      * @param {GameClientService} gameClientService
      */
     constructor(gameEngineService, gameClientService) {
+        super();
         this.gameEngineService = gameEngineService;
         this.gameClientService = gameClientService;
     }
