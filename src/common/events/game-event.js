@@ -1,9 +1,10 @@
-class GameEvent {
+const Event = require('./event');
+
+class GameEvent extends Event {
     constructor(eventName) {
+        super();
         this.eventName = eventName;
     }
-
-    isValid() {}
 }
 
 GameEvent.prototype.GAME_EVENT_KEY = 'gameEvent';

@@ -1,1 +1,0 @@
-const clientAdapter = require('./client-adapter');

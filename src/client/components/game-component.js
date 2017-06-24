@@ -7,6 +7,7 @@ import GameBuilder from '../../../lib/game/builder/game-builder';
 import InputFactory from '../../../lib/game/input/input-factory';
 import EventBus from '../../../lib/events/event-bus';
 import GameObjectTree from '../../../lib/game/game-object-tree';
+import CameraPositionComponent from './camera-position-component';
 
 const GAME_CONTAINER_ID_ATTR = 'gameContainer';
 const GAME_CANVAS_ID_ATTR = 'game';
@@ -20,8 +21,30 @@ class Game extends React.Component {
         this.state = {
             game: undefined
         };
+    }
 
-        this._inputBuffer = [];
+    _getCameraPosition() {
+        return (this.state && this.state.game && this.state.game.cameraPosition)
+    }
+
+    _getCameraPositionY() {
+        const cameraPos = this._getCameraPosition();
+
+        if(cameraPos) {
+            return cameraPos.y;
+        } else {
+            return -1;
+        }
+    }
+
+    _getCameraPositionX() {
+        const cameraPos = this._getCameraPosition();
+
+        if(cameraPos) {
+            return cameraPos.x;
+        } else {
+            return -1;
+        }
     }
 
     render(props={}) {
@@ -30,6 +53,7 @@ class Game extends React.Component {
                 <canvas id={GAME_CANVAS_ID_ATTR} width={props.width || GAME_WINDOW_DEFAULT_WIDTH} height={props.height ||GAME_WINDOW_DEFAULT_HEIGHT }>
                 </canvas>
                 <CreateObjectFormComponent onSubmit={this._handleCreateObjectFormSubmit}/>
+                <CameraPositionComponent cameraPositionX={this._getCameraPositionX()} cameraPositionY={this._getCameraPositionY()}/>
             </div>
         );
     }

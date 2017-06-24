@@ -5,9 +5,10 @@ const DEFAULT_DEBUG_MODE = false;
 const COMMAND_EVENT = 'command';
 
 class Command {
-    constructor(commandKey, args) {
+    constructor(commandKey, args, console) {
         this._commandKey = commandKey;
         this._args = args;
+        this._console = console;
     }
 
     toString() {
@@ -59,7 +60,7 @@ class Console extends EventEmitter {
 
     _createCommand(inputString) {
         const commandParts = inputString.split(this._commandDelimeter);
-        return new Command(commandParts[0], commandParts.splice(1));
+        return new Command(commandParts[0], commandParts.splice(1), this);
     }
 
     _cleanInputString(dirtyChunk) {

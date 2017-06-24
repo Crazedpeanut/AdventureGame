@@ -6,17 +6,22 @@
     "webpack": "webpack"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "bull": "^3.0.0-rc.2",
-    "cookie-parser": "^1.4.3",
+    "config": "^1.26.1",
     "express": "^4.15.2",
     "jsonwebtoken": "^7.4.1",
-    "jwt-express": "^1.1.0",
+    "kue": "^0.11.6",
     "lodash": "^4.17.4",
+    "open": "0.0.5",
     "react": "^15.5.3",
     "react-dom": "^15.5.3",
+    "redis": "^2.7.1",
+    "restify-errors": "^4.3.0",
     "rxjs": "^5.4.0",
     "socket.io": "^2.0.3",
     "socket.io-events": "^0.4.6",
+    "uuid": "^3.0.1",
     "winston": "^2.3.1"
   },
   "devDependencies": {
