@@ -7,6 +7,4 @@ class GameEvent extends Event {
     }
 }
 
-GameEvent.prototype.GAME_EVENT_KEY = 'gameEvent';
-
 module.exports = GameEvent;

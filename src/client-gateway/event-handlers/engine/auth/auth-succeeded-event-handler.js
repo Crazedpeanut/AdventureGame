@@ -6,7 +6,7 @@ class AuthSucceededEventHandler extends GameEngineEventHandler {
      * @param {AuthSucceededEvent} event
      */
     handleEvent(event) {
-        console.log('sending authRequired event to client');
+        console.log('received auth succeededevent from engine');
         this.gameClientService.sendAuthenticationRequiredEvent(event.sessionId);
         this.socket.emit('auth/authRequired', event);
     }

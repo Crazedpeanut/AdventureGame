@@ -5,8 +5,11 @@ class AuthEvent extends Event {
         super('authEvent');
         this.authEventType = authEventType;
     }
-}
 
-AuthEvent.prototype.AUTH_EVENT_KEY = 'authEvent';
+    getEventPath() {
+        return `${super.getEventPath()}/${this.authEventType}}`;
+    }
+
+}
 
 module.exports = AuthEvent;

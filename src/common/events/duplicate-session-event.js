@@ -1,8 +1,8 @@
-const Event = require('./event');
+const SessionEvent = require('./session-event');
 
-class DuplicateSessionEvent extends Event {
+class DuplicateSessionEvent extends SessionEvent {
     constructor(sessionId) {
-        super('duplicationSession');
+        super('duplicateSession');
         this.sessionId = sessionId;
     }
 }

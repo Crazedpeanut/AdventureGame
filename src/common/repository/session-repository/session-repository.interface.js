@@ -13,6 +13,12 @@ class SessionRepository {
     getSessionByUserId(userId) {}
 
     /**
+     * @param {String} userId
+     * @param {String} sessionId
+     */
+    associateUserIdWithSession(userId, sessionId) {}
+
+    /**
      * @param {String} socketId
      * @return {String}
      */
@@ -34,6 +40,16 @@ class SessionRepository {
      * @param {Session} session
      */
     createSession(session) {}
+
+    /**
+     * @return {String}
+     */
+    createNewSessionId() {}
+
+    /**
+     * @param {String} sessionId
+     */
+    deleteSession(sessionId) {}
 
     /**
      * @param {String} ownerSocketId

@@ -1,40 +1,49 @@
 const RestifyErrors = require('restify-errors');
 
-class AuthController {
+class TokenController {
 
     /**
-     * @param {SessionRepository} sessionRepository
-     * @param {GameEngineService} gameEngineService
+     * @param {TokenService} tokenService
      */
-    constructor(sessionRepository, gameEngineService) {
-        this._sessionRepository = sessionRepository;
-        this._gameEngineService = gameEngineService;
+    constructor(tokenService) {
+        this._tokenService = tokenService;
     }
 
-    async handleSessionAuthentication(req, res) {
-        const sessionId = req.param('sessionId');
+    async handleTokenSign(req, res, next) {
+        const tokenData = req.body;
 
-        if(!sessionId) {
-            console.error('session id was not provided');
-            return res.send(new RestifyErrors.InvalidArgumentError('No session id provided!'));
+        if(!tokenData) {
+            console.error('tokenData was not provided');
+            res.send(new RestifyErrors.InvalidArgumentError('No tokenData provided!'));
+            return next();
         }
 
-        console.log(`Retrieved request to authenticate session ${req.param('sessionId')}`);
+        console.log(`Retrieved request to sign tokenData`);
 
-        if(!this._sessionRepository.sessionExists(sessionId)) {
-            console.error(`Session with id ${sessionId} doesnt exist!`);
-            return res.send(new RestifyErrors.NotFoundError(`Session with id ${sessionId} does not exist`));
+        const signedToken = this._tokenService.createToken(tokenData);
+
+        res.send(signedToken);
+        next();
+    }
+
+    async handleTokenVerify(req, res, next) {
+        const encodedToken = req.param('encodedToken');
+
+        if(!encodedToken) {
+            console.error('No encoded token provided');
+            res.send(new RestifyErrors.InvalidArgumentError('No encodedToken provided!'));
+            return next();
         }
 
         try {
-            this._sessionRepository.setSessionField(sessionId, 'authenticated', true);
-            this._gameEngineService.sendSessionAuthenticatedSucceededEvent(sessionId);
-
-            res.send('Authenticated!');
-        } catch(e) {
-            console.error(`Error setting authenticated flag on session with id ${sessionId} ${e.message}`);
+            const validatedToken = await this._tokenService.validateToken(encodedToken);
+            res.send(validatedToken);
+        } catch(err) {
+            res.send(new RestifyErrors.UnprocessableEntityError(err.message));
         }
+
+        next();
     }
 }
 
-module.exports = AuthController;
+module.exports = TokenController;

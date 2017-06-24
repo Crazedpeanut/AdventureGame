@@ -1,4 +1,5 @@
 const SessionRepository = require('./session-repository.interface.js');
+const uuid = require('uuid/v4');
 const _ = require('lodash');
 
 class RedisSessionRepository extends SessionRepository {
@@ -31,14 +32,59 @@ class RedisSessionRepository extends SessionRepository {
         }
     }
 
-    createSession(session) {
+    async createSession(session) {
         const flatSession = this._sessionFactory.flatten(session);
 
-        this._redisClient.hmset(...flatSession);
+        return new Promise((resolve, reject) => {
+            this._redisClient.hmset(...flatSession, (err, reply) => {
+                if(err) {
+                    return reject(err);
+                }
+
+                return resolve(reply);
+            });
+        });
     }
 
-    getSessionByUserId(userId) {
+    deleteSession(sessionId) {
+        return this._redisClient.del(`session:${sessionId}`);
+    }
 
+    async getSessionByUserId(userId) {
+
+        console.log('Attempting to find sessionId for userId: ' + userId);
+
+        const sessionId = await new Promise((resolve, reject) => {
+            this._redisClient.hget('user.session.map', userId, (err, reply) => {
+                if(err) {
+                    console.error(`Error getting sessionId for userId ${userId} status ${err.message}`);
+                    return reject(err);
+                }
+
+                return resolve(reply);
+            });
+        });
+
+        if(!sessionId) {
+            console.log('No session id for userId: ' + userId);
+            return null;
+        }
+
+        console.log(`Found Session id ${sessionId} for userId ${userId}`);
+
+        return this.getSessionById(sessionId);
+    }
+
+    async associateUserIdWithSession(userId, sessionId) {
+        return await new Promise((resolve, reject) => {
+            this._redisClient.hset(`user.session.map`, userId, sessionId, (err, reply) => {
+                if(err) {
+                    console.error(`Error adding index entry for userId ${userId} and sessionId ${sessionId}`);
+                    return reject(Error(err));
+                }
+
+                return resolve(reply);            });
+        });
     }
 
     findSessionIdByOwnerSocketId(socketId) {
@@ -65,13 +111,15 @@ class RedisSessionRepository extends SessionRepository {
 
     async createSessionLock(ownerSocketId, sessionId, ttlSeconds=10, heartbeatIntervalSeconds=8000) {
 
-        const lockResult = await this._redisClient.setnx(`session.lock:${sessionId}`, ownerSocketId, (err, reply) => {
-             if(err) {
-                 console.error(`Error setting distributed lock for sessionId: ${sessionId}`);
-                 throw new Error(err);
-             }
+        const lockResult = await new Promise((resolve, reject) => {
+            this._redisClient.setnx(`session.lock:${sessionId}`, ownerSocketId, (err, reply) => {
+                if(err) {
+                    console.error(`Error setting distributed lock for sessionId: ${sessionId}`);
+                    return reject(Error(err));
+                }
 
-             return reply === 1;
+                return resolve(reply === 1);
+            });
         });
 
         if(!lockResult) return lockResult;
@@ -82,7 +130,7 @@ class RedisSessionRepository extends SessionRepository {
         return lockResult;
     }
 
-    _sessionLockHeartBeat(sessionId, ttlSeconds, intervalMs) {
+    async _sessionLockHeartBeat(sessionId, ttlSeconds, intervalMs) {
         const currentTtl = this._redisClient.ttl(`session.lock:${sessionId}`);
 
         console.log('Current Locks: ' + JSON.stringify(this._sessionLocks));
@@ -90,11 +138,40 @@ class RedisSessionRepository extends SessionRepository {
         if(this._sessionLocks[sessionId]) {
             console.log(`Heartbeat: ${sessionId}. Current TTL: ${currentTtl} Postponing expire for ${ttlSeconds} seconds`);
 
-            this._redisClient.expire(`session.lock:${sessionId}`, ttlSeconds);
+            await new Promise((resolve, reject) => {
+                this._redisClient.expire(`session.lock:${sessionId}`, ttlSeconds, (err, reply) => {
+                    if(err) {
+                        return reject(err);
+                    }
+
+                    return resolve(reply);
+                });
+            });
             setTimeout(this._sessionLockHeartBeat.bind(this, sessionId, ttlSeconds, intervalMs), intervalMs)
         } else {
             console.log(`Heartbeat: ${sessionId}. Letting the lock expire`);
         }
+    }
+
+    async createNewSessionId() {
+        let sessionId = uuid();
+        let numRetries = 0;
+
+        try {
+            while(await this.isSessionLocked(sessionId) !== true && numRetries < 10) {
+                sessionId = uuid();
+            }
+
+            if(numRetries >= 10) {
+                console.error(`Tried allocating a session id. Failed ${numRetries} times`);
+                throw new Error('Error allocating sessionId')
+            }
+        } catch(err) {
+            console.error(err);
+            sessionId = null;
+        }
+
+        return sessionId;
     }
 
     deleteSessionLock(sessionId) {
@@ -113,13 +190,15 @@ class RedisSessionRepository extends SessionRepository {
     }
 
     async isSessionLocked(sessionId) {
-        return await this._redisClient.get((err, reply) => {
-            if(err) {
-                console.error(`Error getting lock status ${err.message}`);
-                throw new Error(err);
-            } else {
-                return (reply === true);
-            }
+        return await new Promise((resolve, reject) => {
+            this._redisClient.get(sessionId, (err, reply) => {
+                if(err) {
+                    console.error(`Error getting lock status ${err.message}`);
+                    return reject(Error(err));
+                } else {
+                    return resolve((reply === true));
+                }
+            });
         });
     }
 
@@ -137,9 +216,17 @@ class RedisSessionRepository extends SessionRepository {
     }
 
    async setSessionField(sessionId, keyName, keyVal) {
-        console.log(`Setting session ${sessionId} field ${keyName} to ${keyVal}`);
-        return await(this._redisClient.hset(sessionId, keyName, keyVal));
-    }
+       console.log(`Setting session ${sessionId} field ${keyName} to ${keyVal}`);
+       return new Promise((resolve, reject) => {
+           this._redisClient.hset(sessionId, keyName, keyVal, (err, reply) => {
+                if(err) {
+                    return reject(err);
+                }
+
+                return resolve(reply);
+           });
+       });
+   }
 }
 
 module.exports = RedisSessionRepository;

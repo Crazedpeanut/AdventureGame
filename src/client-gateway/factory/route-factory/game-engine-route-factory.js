@@ -4,21 +4,25 @@ const AuthSucceededEventHandler = require('../../event-handlers/engine/auth/auth
 class GameEngineRouteFactory {
 
     /**
-     * @param {GameEngineService} gameEngineService
+     * @param {GameClientEngineAdapter} gameClientEngineAdapter
      * @param {GameClientService} gameClientService
      */
-    constructor(gameEngineService, gameClientService) {
-        this.gameEngineService = gameEngineService;
-        this.gameClientService = gameClientService;
+    constructor(gameClientEngineAdapter) {
+        this.gameClientEngineAdapter = gameClientEngineAdapter;
     }
 
+    /**
+     * @return {AbstractEventRouter}
+     */
     create() {
-        const clientRouter = new EventRouter();
+        const engineRouter = new EventRouter();
         const authRouter = new EventRouter();
 
-        authRouter.registerHandler(/^authSucceeded/, new AuthSucceededEventHandler(this.gameEngineService, this.gameClientService));
+        authRouter.registerHandler(/^authSucceeded/, new AuthSucceededEventHandler(this.gameClientEngineAdapter));
 
-        clientRouter.registerRouter(/$authEvent\/.*^/, authRouter);
+        engineRouter.registerRouter(/$authEvent\/.*^/, authRouter);
+
+        return engineRouter;
     }
 }
 

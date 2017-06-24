@@ -1,10 +1,14 @@
 const Event = require('./event');
 
-class DuplicateSessionEvent extends Event {
-    constructor(sessionId) {
+class SessionEvent extends Event {
+    constructor(sessionEventType) {
         super('sessionEvent');
-        this.sessionId = sessionId;
+        this.sessionEventType = sessionEventType;
+    }
+
+    getEventPath() {
+        return `${super.getEventPath()}/${this.sessionEventType}`;
     }
 }
 
-module.exports = DuplicateSessionEvent;
+module.exports = SessionEvent;

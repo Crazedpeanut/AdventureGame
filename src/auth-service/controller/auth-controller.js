@@ -1,4 +1,5 @@
 const RestifyErrors = require('restify-errors');
+const AuthSucceededEvent = require('../../common/events/auth-succeeded-event');
 
 class AuthController {
 
@@ -7,33 +8,51 @@ class AuthController {
      * @param {GameEngineService} gameEngineService
      */
     constructor(sessionRepository, gameEngineService) {
-        this._sessionRepository = sessionRepository;
-        this._gameEngineService = gameEngineService;
+        this.sessionRepository = sessionRepository;
+        this.gameEngineService = gameEngineService;
     }
 
-    async handleSessionAuthentication(req, res) {
+    async handleSessionAuthentication(req, res, next) {
         const sessionId = req.param('sessionId');
+        const userId = req.param('userId');
 
         if(!sessionId) {
             console.error('session id was not provided');
-            return res.send(new RestifyErrors.InvalidArgumentError('No session id provided!'));
+            res.send(new RestifyErrors.InvalidArgumentError('No session id provided!'));
+            return next();
         }
 
-        console.log(`Retrieved request to authenticate session ${req.param('sessionId')}`);
+        if(!userId) {
+            console.error('user id was not provided');
+            res.send(new RestifyErrors.InvalidArgumentError('No session id provided!'));
+            return next();
+        }
 
-        if(!this._sessionRepository.sessionExists(sessionId)) {
+        console.log(`Retrieved request to authenticate session ${req.param('sessionId')} with userId ${userId}`);
+
+        if(!await this.sessionRepository.sessionExists(sessionId)) {
             console.error(`Session with id ${sessionId} doesnt exist!`);
-            return res.send(new RestifyErrors.NotFoundError(`Session with id ${sessionId} does not exist`));
+            res.send(new RestifyErrors.NotFoundError(`Session with id ${sessionId} does not exist`));
+            return next();
+        }
+
+        if(await this.sessionRepository.getSessionByUserId(userId)) {
+            console.error(`User id: ${userId} already has an active session`);
+            res.send(new RestifyErrors.ForbiddenError(`User: ${userId} already has an active session`));
+            return next();
         }
 
         try {
-            this._sessionRepository.setSessionField(sessionId, 'authenticated', true);
-            this._gameEngineService.sendSessionAuthenticatedSucceededEvent(sessionId);
+            this.sessionRepository.setSessionField(sessionId, 'authenticated', true);
+            this.gameEngineService.sendEvent(sessionId, new AuthSucceededEvent(sessionId));
 
             res.send('Authenticated!');
         } catch(e) {
             console.error(`Error setting authenticated flag on session with id ${sessionId} ${e.message}`);
+            res.send(RestifyErrors.InternalServerError(`Error setting authenticated flag on session with id ${sessionId} ${e.message}`))
         }
+
+        return next();
     }
 }
 

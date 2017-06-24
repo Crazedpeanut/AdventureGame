@@ -1,3 +1,9 @@
-/**
- * Created by john on 24/06/2017.
- */
+class SessionToken {
+    constructor(sessionId, timeSigned, expires) {
+        this.sessionId = sessionId;
+        this.timeSigned = timeSigned;
+        this.expires = expires;
+    }
+}
+
+module.exports = SessionToken;

@@ -1,9 +1,9 @@
-const Event = require('./event');
+const SessionEvent = require('./session-event');
 
-class SessionTokenCreatedEvent extends Event {
-    constructor(encodedSessionToken) {
+class SessionTokenCreatedEvent extends SessionEvent {
+    constructor(signedSessionToken) {
         super('sessionTokenCreated');
-        this.encodedSessionToken = encodedSessionToken;
+        this.encodedSessionToken = signedSessionToken;
     }
 }
 

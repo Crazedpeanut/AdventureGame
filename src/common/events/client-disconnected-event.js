@@ -1,11 +1,10 @@
 const Event = require('./event');
 
-class ClientConnectedEvent extends Event {
-    constructor(socketId, encodedSessionToken) {
-        super('clientConnected');
+class ClientDisconnectedEvent extends Event {
+    constructor(socketId) {
+        super('clientDisconnected');
         this.socketId = socketId;
-        this.encodedSessionToken = encodedSessionToken;
     }
 }
 
-module.exports = ClientConnectedEvent;
+module.exports = ClientDisconnectedEvent;

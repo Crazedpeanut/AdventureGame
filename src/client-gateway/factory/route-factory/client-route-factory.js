@@ -1,18 +1,21 @@
 const EventRouter = require('../../../common/event-router/event-router.abstract');
-const AuthRequiredEventHandler = require('../../event-handlers/client/auth/auth-required-event-handler');
 
 class ClientRouteFactory {
 
     /**
-     * @param {GameClientService} gameClient
+     * @param {GameClientEngineAdapter} gameClientEngineAdapter
      */
-    static create(gameClient) {
+    constructor(gameClientEngineAdapter) {
+        this._gameClientEngineAdapter = gameClientEngineAdapter;
+    }
+
+    create() {
         const clientRouter = new EventRouter();
         const authRouter = new EventRouter();
 
-        authRouter.registerHandler(/^authRequired$/, new AuthRequiredEventHandler(gameClient));
-
         clientRouter.registerRouter(/$authEvent\/.*^/, authRouter);
+
+        return clientRouter;
     }
 }
 

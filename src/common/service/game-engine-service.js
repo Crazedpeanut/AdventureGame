@@ -1,34 +1,24 @@
-const AuthSucceededEvent = require('../events/auth-succeeded-event');
-
 class GameEngineService {
 
     /**
      * @param {GameEngineAdapter} gameEngineAdapter
-     * @param {EventRouter} gameEngineRouter
+     * @param {Router} gameEngineRouter
      */
     constructor(gameEngineAdapter, gameEngineRouter) {
         this._gameEngineAdapter = gameEngineAdapter;
         this._gameEngineRouter = gameEngineRouter;
     }
 
-    sendSessionAuthenticatedSucceededEvent(sessionId) {
-        this._gameEngineAdapter.sendEvent(`session.queue:${sessionId}`, '/authEvent/authSucceeded', new AuthSucceededEvent(sessionId));
+    async sendEvent(sessionId, event) {
+        this._gameEngineAdapter.sendEvent(`game.engine.session:${sessionId}.queue`, event.eventPath, event);
     }
 
     listenForSessionEvents(sessionId) {
-        this._gameEngineAdapter.addEventListener(`session:${sessionId}.queue`, this.gameEngineRouter);
+        this._gameEngineAdapter.addEventListener(`game.client.session:${sessionId}.queue`, this._gameEngineRouter);
     }
 
     stopListeningForSessionEvents(sessionId) {
-        this._gameEngineAdapter.removeEventListener(`session:${sessionId}.queue`);
-    }
-
-    get gameEngineRouter() {
-        return this._gameEngineRouter;
-    }
-
-    set gameEngineRouter(gameEngineRouter) {
-        this._gameEngineRouter = gameEngineRouter;
+        this._gameEngineAdapter.removeEventListener(`game.client.session:${sessionId}.queue`);
     }
 }
 

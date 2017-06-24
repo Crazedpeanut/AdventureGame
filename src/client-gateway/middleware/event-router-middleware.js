@@ -1,3 +1,8 @@
+/**
+ * @param {EventFactory} eventFactory
+ * @param {EventRouter} clientEventRouter
+ * @returns {routeEvent}
+ */
 module.exports = (eventFactory, clientEventRouter) => {
     return function routeEvent(sock, args, next) {
         const event = eventFactory.createEvent(args[0], args[1]);

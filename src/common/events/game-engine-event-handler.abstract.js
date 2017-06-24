@@ -3,13 +3,11 @@ const EventHandler = require('../../common/event-router/event-handler.interface'
 class GameEngineEventHandler extends EventHandler {
 
     /**
-     * @param {GameEngineService} gameEngineService
-     * @param {GameClientService} gameClientService
+     * @param {GameClientEngineAdapter} gameClientEngineAdapter
      */
-    constructor(gameEngineService, gameClientService) {
+    constructor(gameClientEngineAdapter) {
         super();
-        this.gameEngineService = gameEngineService;
-        this.gameClientService = gameClientService;
+        this.gameClientEngineAdapter = gameClientEngineAdapter;
     }
 }
 
