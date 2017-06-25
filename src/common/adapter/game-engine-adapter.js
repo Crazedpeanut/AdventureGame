@@ -12,7 +12,7 @@ class GameEngineAdapter {
         this._queues = {};
     }
 
-    addEventListener(key, gameEngineRouter) {
+    addJobQueueListener(key, gameEngineRouter) {
         this._queues[key] = Bull.createQueue(key, this._redisUrl, (job, done) => {
             const eventHandler = gameEngineRouter.findHandler(job.data.eventPath);
             const event = this._eventFactory.createEvent(job.data.eventPath, job.data.event);
@@ -32,18 +32,30 @@ class GameEngineAdapter {
         });
     }
 
-    removeEventListener(key) {
+    removeJobQueueListener(key) {
         this._queues[key].close();
     }
 
-    sendEvent(key, eventPath, event) {
-        let queue = this._queues[key]; //Try and use one of the listener queues
+    addJobToJobqueue(key, eventPath, event) {
+        let queue = this._queues[key]; //Try and use one of the existing listener queues
 
         if(!queue) {
             queue = Bull.createQueue(key);
         }
 
         queue.add({eventPath, event});
+    }
+
+    addBroadcastEventListener(key, gameEngineRouter) {
+        //TODO
+    }
+
+    removeBroadcastEventListener(key, gameEngineRouter) {
+        //TODO
+    }
+
+    addBroadcastEvent(key, eventPath, event) {
+        //TODO
     }
 }
 
