@@ -43,8 +43,8 @@ class AuthController {
         }
 
         try {
-            this.sessionRepository.setSessionField(sessionId, 'authenticated', true);
-            this.gameEngineService.sendEvent(sessionId, new AuthSucceededEvent(sessionId));
+            await this.sessionRepository.setSessionField(sessionId, 'authenticated', true);
+            this.gameEngineService.addSessionEvent(sessionId, new AuthSucceededEvent(sessionId));
 
             res.send('Authenticated!');
         } catch(e) {

@@ -9,16 +9,20 @@ class GameEngineService {
         this._gameEngineRouter = gameEngineRouter;
     }
 
-    async sendEvent(sessionId, event) {
-        this._gameEngineAdapter.sendEvent(`game.engine.session:${sessionId}.queue`, event.eventPath, event);
+    async addToSessionJobQueue(sessionId, event) {
+        return this._gameEngineAdapter.sendEvent(`game.engine.session:${sessionId}.queue`, event.eventPath, event);
     }
 
     listenForSessionEvents(sessionId) {
-        this._gameEngineAdapter.addEventListener(`game.client.session:${sessionId}.queue`, this._gameEngineRouter);
+        return this._gameEngineAdapter.addJobQueueListener(`game.engine.session:${sessionId}.queue`, this._gameEngineRouter);
     }
 
     stopListeningForSessionEvents(sessionId) {
-        this._gameEngineAdapter.removeEventListener(`game.client.session:${sessionId}.queue`);
+        return this._gameEngineAdapter.removeJobQueueListener(`game.client.session:${sessionId}.queue`);
+    }
+
+    addSessionEvent(sessionId, event) {
+        return this._gameEngineAdapter.addJobToJobQueue(`game.client.session:${sessionId}.queue`, event);
     }
 }
 

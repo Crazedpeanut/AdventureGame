@@ -36,7 +36,7 @@ class GameEngineAdapter {
         this._queues[key].close();
     }
 
-    addJobToJobqueue(key, eventPath, event) {
+    addJobToJobQueue(key, eventPath, event) {
         let queue = this._queues[key]; //Try and use one of the existing listener queues
 
         if(!queue) {

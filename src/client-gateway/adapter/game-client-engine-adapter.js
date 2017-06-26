@@ -107,6 +107,9 @@ class GameClientEngineAdapter {
     sendEventToEngine(socketId, event) {
         const sessionId = this.socketIdSessionIdResolverService.resolveSessionId(socketId);
 
+        // Inject session id into event
+        event.sessionId = sessionId;
+
         return this.gameEngineService.sendEvent(sessionId, event);
     }
 }

@@ -1,6 +1,11 @@
+const uuid = require('uuid/v4');
+
 class Event {
-    constructor(eventName) {
+    constructor(eventName, sessionId, createdTimestamp=Date.now(), messageId=uuid()) {
         this.eventName = eventName;
+        this.sessionId = sessionId;
+        this.createdTimestamp = createdTimestamp;
+        this.messageId = messageId;
     }
 
     getEventPath() {

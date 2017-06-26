@@ -2,7 +2,7 @@ const Event = require('./event');
 
 class SessionEvent extends Event {
     constructor(sessionEventType) {
-        super('sessionEvent');
+        super('sessionEvent', sessionId);
         this.sessionEventType = sessionEventType;
     }
 
