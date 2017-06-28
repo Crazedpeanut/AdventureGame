@@ -1,0 +1,6 @@
+{
+  "authServicerUrl":"http://adventuregame.johnkendall.net/auth",
+  "redisCacheUrl":"redis://localhost:32768",
+  "gameEngineRedisQueueUrl":"redis://localhost:32768",
+  "requireAuth": true
+}

@@ -1,0 +1,17 @@
+{
+  "name": "adventure-game-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Kendall",
+  "license": "ISC",
+  "dependencies": {
+    "adventure-game-common": "^1.0.0",
+    "config": "^1.26.1",
+    "open": "0.0.5",
+    "socket.io-client": "^2.0.3"
+  }
+}
