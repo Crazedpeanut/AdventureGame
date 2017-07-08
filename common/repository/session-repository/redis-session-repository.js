@@ -158,7 +158,7 @@ class RedisSessionRepository extends SessionRepository {
         let numRetries = 0;
 
         try {
-            while(await this.isSessionLocked(sessionId) !== true && numRetries < 10) {
+            while(await this.isSessionLocked(sessionId) === true && numRetries < 10) {
                 sessionId = uuid();
             }
 
@@ -167,11 +167,11 @@ class RedisSessionRepository extends SessionRepository {
                 throw new Error('Error allocating sessionId')
             }
         } catch(err) {
-            console.error(err);
+            console.error('Error creating session id', err);
             sessionId = null;
         }
 
-        return sessionId;
+        return Promise.resolve(sessionId);
     }
 
     deleteSessionLock(sessionId) {
@@ -196,7 +196,8 @@ class RedisSessionRepository extends SessionRepository {
                     console.error(`Error getting lock status ${err.message}`);
                     return reject(Error(err));
                 } else {
-                    return resolve((reply === true));
+                    console.log('Got session lock val from redis: ' + reply);
+                    return resolve(reply === true);
                 }
             });
         });
@@ -211,7 +212,7 @@ class RedisSessionRepository extends SessionRepository {
 
             console.log(`Redis response for sessionId ${sessionId} exists: ${reply}`);
 
-            return reply === 1;
+            return Promise.resolve(reply === 1);
         })
     }
 

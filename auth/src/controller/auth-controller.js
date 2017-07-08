@@ -1,5 +1,5 @@
 const RestifyErrors = require('restify-errors');
-const AuthSucceededEvent = require('../../common/events/auth-succeeded-event');
+const AuthSucceededEvent = require('adventure-game-common/events/auth-succeeded-event');
 const config = require('config');
 
 class AuthController {
@@ -14,8 +14,8 @@ class AuthController {
     }
 
     async handleSessionAuthentication(req, res, next) {
-        const sessionId = req.param('sessionId');
-        const userId = req.param('userId');
+        const sessionId = req.body.sessionId;
+        const userId = req.body.userId;
 
         if(!sessionId) {
             console.error('session id was not provided');
@@ -25,7 +25,7 @@ class AuthController {
 
         if(!userId) {
             console.error('user id was not provided');
-            res.send(new RestifyErrors.InvalidArgumentError('No session id provided!'));
+            res.send(new RestifyErrors.InvalidArgumentError('No user id provided!'));
             return next();
         }
 

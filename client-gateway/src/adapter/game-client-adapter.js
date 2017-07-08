@@ -62,7 +62,7 @@ class GameClientAdapter {
     async _onNewConnection(io, socket) {
         console.log('Connection');
 
-        this.connectionEventHandler.handleEvent(new ClientConnectedEvent(socket.id), );
+        this.connectionEventHandler.handleEvent(new ClientConnectedEvent(socket.id));
 
         socket.on('disconnect', () => this._onDisconnect.bind(this));
     }
@@ -70,7 +70,7 @@ class GameClientAdapter {
     _onDisconnect(socket) {
         console.log(`Socket ${socket.id} disconnected`);
 
-        this.disconnectionEventHandler.handleEvent(new ClientDisconnectedEvent(socket.id), );
+        this.disconnectionEventHandler.handleEvent(new ClientDisconnectedEvent(socket.id));
     }
 }
 

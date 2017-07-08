@@ -1,14 +1,14 @@
 const Express = require('express');
 const AuthController = require('./controller/auth-controller');
 const BodyParser = require('body-parser');
-const SessionRepository = require('../common/repository/session-repository/redis-session-repository');
-const SessionFactory = require('../common/factory/session-factory');
+const SessionRepository = require('adventure-game-common/repository/session-repository/redis-session-repository');
+const SessionFactory = require('adventure-game-common/factory/session-factory');
 const Redis = require('redis');
-const GameEngineServiceFactory = require('../common/factory/game-engine-service-factory');
+const GameEngineServiceFactory = require('adventure-game-common/factory/game-engine-service-factory');
 const TokenController = require('./controller/token-controller');
 const TokenService = require('./service/token-service');
-const GameEngineAdapter = require('../common/adapter/game-engine-adapter');
-const EventFactory = require('../common/factory/event-factory');
+const GameEngineAdapter = require('adventure-game-common/adapter/game-engine-adapter');
+const EventFactory = require('adventure-game-common/factory/event-factory');
 const config = require('config');
 
 const express = Express();
@@ -26,7 +26,7 @@ express.use(BodyParser.urlencoded({ extended: false }));
 // parse application/json
 express.use(BodyParser.json());
 
-express.post('/session/:sessionId/authenticate', authController.handleSessionAuthentication.bind(authController));
+express.post('/session/authenticate/:provider', authController.handleSessionAuthentication.bind(authController));
 express.post('token/sign', tokenController.handleTokenSign.bind(tokenController));
 express.post('token/verify', tokenController.handleTokenVerify.bind(tokenController));
 

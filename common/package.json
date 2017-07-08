@@ -1,11 +1,12 @@
 {
   "name": "adventure-game-common",
-  "version": "1.0.1",
+  "version": "1.0.7",
   "description": "",
   "main": "index.js",
   "dependencies": {
     "bull": "^3.0.0-rc.3",
     "lodash": "^4.17.4",
+    "redis": "^2.7.1",
     "uuid": "^3.1.0"
   },
   "devDependencies": {},

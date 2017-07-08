@@ -35,7 +35,7 @@ class GameClientEngineAdapter {
             try {
                 sessionId = await this.sessionRepository.createNewSessionId();
             } catch(err) {
-                console.error(err);
+                console.error('Error creating session id', err);
                 //TODO DO something if a session can't be created. I.e raise an event and send it to the client
             }
 
